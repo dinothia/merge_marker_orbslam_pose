@@ -8,4 +8,4 @@ gnome-terminal --tab -- bash -c "echo \"image_transport compressed to raw\" && s
 gnome-terminal --tab -- bash -c "echo \"Marker based pose estimation\" && sleep 1 && python3 ~/Documents/Prosjektoppgave/Code/charuco_pose_estimation/main.py /camera/image_raw/compressed ~/Documents/Prosjektoppgave/Code/charuco_pose_estimation/cameraParams.yaml ~/Documents/Prosjektoppgave/Code/charuco_pose_estimation/cameraTrajectory.txt" 
 
 # Run bag file
-gnome-terminal --tab -- bash -c "sleep 10 && rosbag play -r $3 ~/Datasets/Kaia/$1 -s $2"
+gnome-terminal --tab -- bash -c "sleep 10 && rosbag play -r $4 ~/Datasets/Kaia/$1 -s $2 -d $3"

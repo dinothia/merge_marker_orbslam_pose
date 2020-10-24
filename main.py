@@ -93,8 +93,8 @@ if __name__ == "__main__":
     plt.title("Marker Z")
     plt.plot(t_Marker, tvecs_Marker[:,2])
     plt.subplot(212)
-    plt.title("SLAM Y")
-    plt.plot(t_SLAM, scale*tvecs_SLAM[:,1]+offset)
+    plt.title("SLAM Z")
+    plt.plot(t_SLAM, scale*tvecs_SLAM[:,2]+offset)
 
 
     plt.figure(2)
@@ -102,15 +102,16 @@ if __name__ == "__main__":
     plt.title("Marker Y")
     plt.plot(t_Marker, tvecs_Marker[:,1])
     plt.subplot(212)
-    plt.title("SLAM X")
-    plt.plot(t_SLAM, scale*tvecs_SLAM[:,0]+offset)
+    plt.title("SLAM Y")
+    plt.plot(t_SLAM, scale*tvecs_SLAM[:,1]+offset)
+    
 
     plt.figure(3)
     plt.subplot(211)
     plt.title("Marker X")
     plt.plot(t_Marker, tvecs_Marker[:,0])
     plt.subplot(212)
-    plt.title("SLAM Z")
-    plt.plot(t_SLAM, scale*tvecs_SLAM[:,2]+offset)
+    plt.title("SLAM X")
+    plt.plot(t_SLAM, scale*tvecs_SLAM[:,0]+offset)
 
     plt.show()
