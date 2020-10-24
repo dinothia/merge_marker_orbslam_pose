@@ -79,11 +79,38 @@ def read_pose_marker(filepath):
 
 
 if __name__ == "__main__":    
-    t_Marker, tvecs_Marker, eulers_Marker = read_pose_marker("cameraTrajectory.txt")
-    t_SLAM, tvecs_SLAM, eulers_SLAM = read_pose_orbslam("KeyFrameTrajectory.txt")
+    marker_pose_path = "/home/dino/Documents/Prosjektoppgave/Code/charuco_pose_estimation/cameraTrajectory.txt"
+    orbslam_pose_path = "/home/dino/Installs/ORB_SLAM3/KeyFrameTrajectory.txt"
+
+    t_Marker, tvecs_Marker, eulers_Marker = read_pose_marker(marker_pose_path)
+    t_SLAM, tvecs_SLAM, eulers_SLAM = read_pose_orbslam(orbslam_pose_path)
     
+    scale = 96.41 
+    offset = 0
+
     plt.figure(1)
-    plt.plot(tvecs_Marker[:,2])
+    plt.subplot(211)
+    plt.title("Marker Z")
+    plt.plot(t_Marker, tvecs_Marker[:,2])
+    plt.subplot(212)
+    plt.title("SLAM Y")
+    plt.plot(t_SLAM, scale*tvecs_SLAM[:,1]+offset)
+
+
     plt.figure(2)
-    plt.plot(tvecs_SLAM[:,0])
+    plt.subplot(211)
+    plt.title("Marker Y")
+    plt.plot(t_Marker, tvecs_Marker[:,1])
+    plt.subplot(212)
+    plt.title("SLAM X")
+    plt.plot(t_SLAM, scale*tvecs_SLAM[:,0]+offset)
+
+    plt.figure(3)
+    plt.subplot(211)
+    plt.title("Marker X")
+    plt.plot(t_Marker, tvecs_Marker[:,0])
+    plt.subplot(212)
+    plt.title("SLAM Z")
+    plt.plot(t_SLAM, scale*tvecs_SLAM[:,2]+offset)
+
     plt.show()
