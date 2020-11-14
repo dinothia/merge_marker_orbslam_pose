@@ -90,7 +90,7 @@ def read_ground_truth(filepath):
     eulers[:,1] = pitch_hat.copy()
     eulers[:,2] = yaw_hat.copy()
 
-    return t, tvecs, eulers
+    return t, tvecs, eulers, v_eb_n_hat.T
 
 def read_all3_day2_trip_paths(trip_nr):
     ground_truth_path = f"/home/dino/Datasets/Kaia/Ground Truth/obsv_estimates ({trip_nr}).mat"

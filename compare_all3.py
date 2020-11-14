@@ -6,7 +6,7 @@ from utils.read_files import *
 import os
 
 
-TRIP_NR = 3
+TRIP_NR = 1
 start_time_in_s = 0#1.8#13
 
 
@@ -26,7 +26,7 @@ if __name__ == "__main__":
         gps_bag_delay_s
     ) = read_all3_day2_trip_paths(TRIP_NR)
 
-    t_gt, tvecs_gt, eulers_gt = read_ground_truth(ground_truth_path)    
+    t_gt, tvecs_gt, eulers_gt, v_eb_n_hat = read_ground_truth(ground_truth_path)    
     t_slam, tvecs_slam, eulers_slam = read_pose_orbslam(orbslam_pose_path)
     t_marker, tvecs_marker, eulers_marker = read_pose_marker(marker_pose_path)
 
@@ -52,7 +52,7 @@ if __name__ == "__main__":
     end_idx_gt = ((np.abs(t_gt - t_slam[end_idx_slam])).argmin() + gps_bag_delay_s / dt_gt).round().astype("int") # compensate for bag delays
     end_idx_marker = start_idx_marker + np.round(duration_in_s/dt_marker).astype("int")   
     
-    t_gt, tvecs_gt, eulers_gt = t_gt[start_idx_gt:end_idx_gt], tvecs_gt[start_idx_gt:end_idx_gt,:], eulers_gt[start_idx_gt:end_idx_gt,:]
+    t_gt, tvecs_gt, eulers_gt, v_eb_n_hat = t_gt[start_idx_gt:end_idx_gt], tvecs_gt[start_idx_gt:end_idx_gt,:], eulers_gt[start_idx_gt:end_idx_gt,:], v_eb_n_hat[start_idx_gt:end_idx_gt,:]
     t_slam, tvecs_slam, eulers_slam = t_slam[start_idx_slam:end_idx_slam], tvecs_slam[start_idx_slam:end_idx_slam,:], eulers_slam[start_idx_slam:end_idx_slam,:]
     t_marker, tvecs_marker, eulers_marker = t_marker[start_idx_marker:end_idx_marker], tvecs_marker[start_idx_marker:end_idx_marker,:], eulers_marker[start_idx_marker:end_idx_marker,:]
 
