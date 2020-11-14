@@ -98,6 +98,7 @@ if __name__ == "__main__":
     # Calculate scaling from orslam to GT and scale tvecs_slam
     scale_vector = ((np.max(tvecs_gt,0)-np.min(tvecs_gt,0))/(np.max(tvecs_slam_f,0)-np.min(tvecs_slam_f,0)))
     scale = np.mean(scale_vector[:2])
+    #scale = ((tvecs_gt[1,0]-tvecs_gt[0,0])/(t_gt[1]-t_gt[0]))/((tvecs_slam_f[1,0]-tvecs_slam_f[0,0])/(t_slam[1]-t_slam[0])) #scale based on examining the discrete time speed and comparing 
     tvecs_slam_f *= scale
 
     # Add tvecs ground truth offset
