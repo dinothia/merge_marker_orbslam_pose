@@ -6,8 +6,8 @@ from utils.read_files import *
 import os
 
 
-TRIP_NR = 4
-start_time_in_s = 1.8#13
+TRIP_NR = 3
+start_time_in_s = 0#1.8#13
 
 
 if __name__ == "__main__":
@@ -103,10 +103,20 @@ if __name__ == "__main__":
     # Add tvecs ground truth offset
     tvecs_slam_f += tvecs_gt[0,:]
 
+    ################################
+    ## Benchmark info calculation ##
+    ################################
+    # angle between trajectories calculation in xy-plane 
+    vector_1 = (tvecs_gt[-1,:]-tvecs_gt[0,:])[:2]
+    vector_2 = (tvecs_slam_f[-1,:]-tvecs_slam_f[0,:])[:2]
+    angle = calc_angle_between_vectors(vector_1, vector_2) * rad2deg    
+
+    # max distance between trajectories in xy-plane
+    max_xy_dist = np.linalg.norm(tvecs_gt[-1,0:2]-tvecs_slam_f[-1,0:2])
+
     ##########
     ## Plot ##
     ##########
-
     plt.figure()
     plot_tvecs(t_gt, tvecs_gt)
     plot_tvecs(t_slam, tvecs_slam_f, True)
@@ -129,6 +139,7 @@ if __name__ == "__main__":
     plt.figure()
     plt.plot(tvecs_gt[:,0], tvecs_gt[:,1])
     plt.plot(tvecs_slam_f[:,0], tvecs_slam_f[:,1])
+    plt.title(f"Max xy-distance: {np.round(max_xy_dist,2)}m; Angle: {np.round(angle,2)}deg")
     plt.ylabel("y [m]")
     plt.xlabel("x [m]")
     plt.axis("scaled")
