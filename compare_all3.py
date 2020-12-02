@@ -6,9 +6,10 @@ from utils.read_files import *
 import os
 
 
-TRIP_NR = 1
+TRIP_NR = 4
 start_time_in_s = 0#1.8#13
-
+#./run_marker_orbslam.sh  trondheim3_inn.bag 625 2
+#./run_marker_orbslam.sh  trondheim4_inn.bag 815 2
 
 if __name__ == "__main__":
     print("Check if trip number is correct")
@@ -61,6 +62,13 @@ if __name__ == "__main__":
     t_slam -= t_slam[0]
     t_marker -= t_marker[0]
 
+    # Trunc GT to SLAM length
+    trunc_idx = np.argmin(abs(t_gt-t_slam[-1]))
+    t_gt = t_gt[:trunc_idx]
+    tvecs_gt = tvecs_gt[:trunc_idx,:]
+    eulers_gt = eulers_gt[:trunc_idx,:]
+    v_eb_n_hat = v_eb_n_hat[:trunc_idx,:]
+
     # Set position time 0 to 0
     tvecs_slam -= tvecs_slam[0,:]
     eulers_slam -= eulers_slam[0,:]
@@ -83,7 +91,7 @@ if __name__ == "__main__":
     # camera offset + ground truth offset
     roll_offset =   0.823   + eulers_gt[0,0]*rad2deg
     pitch_offset = (-2.807) + eulers_gt[0,1]*rad2deg
-    yaw_offset =    8.3     + eulers_gt[0,2]*rad2deg
+    yaw_offset =    8.3     + eulers_gt[0,2]*rad2deg + 3.7 # 3.7 is manual calibration offset
 
     # In camera frame, compensate for camera and ground truth (GT) offset
     Rot2 = R.from_euler('zyx', [roll_offset, yaw_offset, pitch_offset], degrees=True).as_matrix() 
@@ -114,7 +122,7 @@ if __name__ == "__main__":
 
     # max distance between trajectories in xy-plane
     max_xy_dist = np.linalg.norm(tvecs_gt[-1,0:2]-tvecs_slam_f[-1,0:2])
-
+    
     ##########
     ## Plot ##
     ##########
@@ -148,3 +156,20 @@ if __name__ == "__main__":
     plt.tight_layout()
 
     plt.show()
+    
+    ####################################################
+    # Code for converting to EVO format for evaluation #
+    ####################################################
+    evo_dir = "/home/dino/Installs/evo/test/data/"
+    gt_filename = f"Kaia_trip_{TRIP_NR}_GT.txt"
+    orb_filename = f"Kaia_trip_{TRIP_NR}_ORB.txt"
+    
+    with open(evo_dir + gt_filename, "w") as f:
+        for timestamp, tvecs, euler in zip(t_gt, tvecs_gt, eulers_gt):
+            [qx, qy, qz, qw] = euler_to_quaternion(euler[0], euler[1], euler[2])
+            f.write(f"{timestamp[0]} {tvecs[0]} {tvecs[1]} {tvecs[2]} {qx} {qy} {qz} {qw}\n")
+            
+    with open(evo_dir + orb_filename, "w") as f:
+        for timestamp, tvecs, euler in zip(t_slam, tvecs_slam_f, eulers_slam):
+            [qx, qy, qz, qw] = euler_to_quaternion(euler[0], euler[1], euler[2])
+            f.write(f"{timestamp} {tvecs[0]} {tvecs[1]} {tvecs[2]} {qx} {qy} {qz} {qw}\n")
